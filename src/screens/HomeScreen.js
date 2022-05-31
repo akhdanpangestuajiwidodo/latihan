@@ -83,7 +83,6 @@ function HomeScreen() {
           <Pagination
             data={data}
             RenderComponent={Post}
-            title="Posts"
             pageLimit={5}
             dataLimit={dataPerPage}
             setCurrentPage={(page) => {
