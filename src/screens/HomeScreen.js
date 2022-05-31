@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Pagination from "../components/Pagination";
 import Post from "../components/Posts";
-
-const dataDummy = [
-  { name: "Anom", age: 19, gender: "Male" },
-  { name: "Megha", age: 19, gender: "Female" },
-  { name: "Subham", age: 25, gender: "Male" },
-];
 
 function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [dataPerPage, setDataPerPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(499);
+  const [totalPage] = useState(500);
   const [data, setData] = useState([]);
+  const [disablePrev, setDisablePrev] = useState(false);
+  const [disableNext, setDisableNext] = useState(false);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -28,7 +23,6 @@ function HomeScreen() {
         })
         .then((data) => {
           setData(data.results);
-          setDataPerPage(data.results.length);
         })
         .catch((error) => {
           console.log("data error bos", error);
@@ -55,7 +49,6 @@ function HomeScreen() {
         })
         .then((data) => {
           setData(data.results);
-          setDataPerPage(data.results.length);
         })
         .catch((error) => {
           console.log("data error bos", error);
@@ -69,6 +62,39 @@ function HomeScreen() {
     fetchPost();
   }, [currentPage]);
 
+  //change using next button
+  function goToNextPage() {
+    if (currentPage === totalPage) {
+      setDisableNext(true);
+      return;
+    }
+    setDisablePrev(false);
+    setCurrentPage(currentPage + 1);
+  }
+
+  //change using prev button
+  function goToPreviousPage() {
+    if (currentPage === 1) {
+      setDisablePrev(true);
+      return;
+    }
+    setDisableNext(false);
+    setCurrentPage(currentPage - 1);
+  }
+
+  //bikin group number pagination misal 1-5
+  const pageLimit = 5;
+  const getPaginationGroup = () => {
+    let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
+    return new Array(pageLimit).fill().map((_, idx) => start + idx + 1);
+  };
+
+  //change using number
+  function changePage(event) {
+    const pageNumber = Number(event.target.textContent);
+    setCurrentPage(pageNumber);
+  }
+
   return (
     <div>
       <table>
@@ -80,17 +106,27 @@ function HomeScreen() {
           </tr>
         </thead>
         <tbody>
-          <Pagination
-            data={data}
-            RenderComponent={Post}
-            pageLimit={5}
-            dataLimit={dataPerPage}
-            setCurrentPage={(page) => {
-              setCurrentPage(page);
-            }}
-          />
+          <Post loading={loading} data={data} />
         </tbody>
       </table>
+      <div className="pagination">
+        {/* previous button */}
+        <button onClick={goToPreviousPage} disabled={disablePrev}>
+          prevPage
+        </button>
+
+        {/* show page numbers */}
+        {getPaginationGroup().map((item, index) => (
+          <button key={index} onClick={changePage}>
+            <span>{item}</span>
+          </button>
+        ))}
+
+        {/* next button */}
+        <button onClick={goToNextPage} disabled={disableNext}>
+          nextPage
+        </button>
+      </div>
     </div>
   );
 }

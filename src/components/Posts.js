@@ -4,10 +4,17 @@ const Post = (props) => {
     return <h1>Loading...</h1>;
   }
   return (
-    <tr>
-      <td>{props.data.original_title}</td>
-      <td>{props.data.original_title}</td>
-    </tr>
+    <>
+      {props.data.map((val) => {
+        return (
+          <tr key={val.id}>
+            <td>{val.original_title}</td>
+            <td>{val.vote_count}</td>
+            <td>{val.vote_average}</td>
+          </tr>
+        );
+      })}
+    </>
   );
 };
 
