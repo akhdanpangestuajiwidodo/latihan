@@ -3,7 +3,6 @@ import React, { useState } from "react";
 function Pagination({
   data,
   RenderComponent,
-  title,
   pageLimit,
   dataLimit,
   setCurrentPage,
