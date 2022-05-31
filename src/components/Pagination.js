@@ -23,13 +23,13 @@ function Pagination({
     setCurrentPage(pageNumber);
   }
 
-  //
   const getPaginatedData = () => {
     const startIndex = pageGroup * dataLimit - dataLimit;
     const endIndex = startIndex + dataLimit;
     return data.slice(startIndex, endIndex);
   };
 
+  //bikin group number pagination misal 1-5
   const getPaginationGroup = () => {
     let start = Math.floor((pageGroup - 1) / pageLimit) * pageLimit;
     return new Array(pageLimit).fill().map((_, idx) => start + idx + 1);
